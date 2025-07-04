@@ -1,0 +1,164 @@
+﻿@model FictitiousGamesReviewCore.Models.ProductReviewViewModel
+
+<div class="container" style="margin-top:40px;">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="@Model.Product.ImageUrl"
+                 alt="@Model.Product.Name"
+                 class="img-thumbnail"
+                 style="max-width: 150px; height: auto;" />
+        </div>
+        <div class="col-md-6">
+            <h2>@Model.Product.Name</h2>
+            <p>@Model.Product.Description</p>
+            <p><strong>価格：</strong>@Model.Product.Price.ToString("C")</p>
+            <a asp-action="Index" class="btn btn-default">一覧に戻る</a>
+        </div>
+    </div>
+
+</div>
+<hr />
+
+@if (Model.Product.Reviews != null && Model.Product.Reviews.Any())
+{
+    var average = Model.Product.Reviews.Average(r => r.Rating);
+    var total = Model.Product.Reviews.Count();
+    var breakdown = Enumerable.Range(1, 5)
+        .Select(i => new
+        {
+            Stars = i,
+            Count = Model.Product.Reviews.Count(r => r.Rating == i),
+            Percentage = total == 0 ? 0 : (Model.Product.Reviews.Count(r => r.Rating == i) * 100 / total)
+        }).OrderByDescending(x => x.Stars);
+
+    <div class="container" style="margin-top:40px;">
+        <div class="row">
+            <!-- 左側：平均評価 -->
+            <div class="col-md-4">
+                <h3>Average user rating</h3>
+                <div class="panel panel-default text-center" style="padding:20px;">
+                    <h1 style="margin-bottom:10px;">
+                        <span style="font-size: 48px; font-weight: bold; color: black;">@average.ToString("0.0")</span>
+                        <span style="font-size: 18px; color: gray;">/5</span>
+                    </h1>
+
+                    <div style="width: 120px; margin: 0 auto; text-align: left;">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            var isFilled = i <= Math.Round(average);
+                            var bgColor = isFilled ? "orange" : "#ccc";
+                            <span class="btn btn-default" style="background-color:@bgColor; color:white; margin:2px; width:30px; height:30px; padding:0; text-align:center;">
+                                <span class="glyphicon glyphicon-star" style="line-height:30px;"></span>
+                            </span>
+                            @if (i == 3)
+                            {
+                                <br />
+                            }
+                        }
+                    </div>
+
+                    <p style="margin-top:10px;">@total 件のレビュー</p>
+                </div>
+            </div>
+
+            <!-- 右側：評価内訳 -->
+            <div class="col-md-8">
+                <h3>Rating breakdown</h3>
+                @foreach (var b in breakdown)
+                {
+                    var barClass = b.Stars switch
+                    {
+                        5 => "progress-bar-success",
+                        4 => "progress-bar-info",
+                        3 => "progress-bar-warning",
+                        _ => "progress-bar-danger"
+                    };
+
+                    <div style="margin-bottom:10px;">
+                        <div>@b.Stars ★</div>
+                        <div class="progress" style="height:10px;">
+                            <div class="progress-bar @barClass" role="progressbar" style="width:@b.Percentage%">
+                            </div>
+                        </div>
+                        <div style="text-align:right; width:100%;">@b.Count 件</div>
+                    </div>
+                }
+            </div>
+
+            <h3 style="margin-top:40px;">レビュー一覧</h3>
+
+            <ul class="list-group">
+                @foreach (var review in Model.Product.Reviews.OrderByDescending(r => r.CreatedAt))
+                {
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-2 text-center">
+                                <div style="white-space: nowrap;">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        var isFilled = i <= review.Rating;
+                                        var bgColor = isFilled ? "orange" : "#ccc";
+                                        <span class="btn btn-default btn-sm" style="background-color:@bgColor; color:white; margin:2px; width:22px; height:22px; padding:0; text-align:center;">
+                                            <span class="glyphicon glyphicon-star" style="line-height:22px;"></span>
+                                        </span>
+                                    }
+                                </div>
+                                <small class="text-muted">@review.Rating/5</small>
+                            </div>
+                            <div class="col-md-10">
+                                <strong>@review.ReviewerName</strong><br />
+                                <small class="text-muted">@review.CreatedAt.ToString("yyyy/MM/dd HH:mm")</small>
+                                <p style="margin-top:8px;">@review.Comment</p>
+                            </div>
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
+else
+{
+    <p>この商品にはまだレビューがありません。</p>
+}
+<div class="panel panel-default" style="padding:20px;">
+    <h4 class="panel-heading">レビュー投稿フォーム</h4>
+
+    <form asp-action="Details" method="post">
+        <input type="hidden" asp-for="NewReview.ProductId" value="@Model.Product.Id" />
+
+        <!-- 名前 -->
+        <div class="form-group">
+            <label asp-for="NewReview.ReviewerName">お名前</label>
+            <input asp-for="NewReview.ReviewerName" class="form-control" placeholder="表示される名前" />
+            <span asp-validation-for="NewReview.ReviewerName" class="text-danger"></span>
+        </div>
+
+        <!-- 評価 -->
+        <div class="form-group">
+            <label asp-for="NewReview.Rating">評価</label>
+            <select asp-for="NewReview.Rating" class="form-control">
+                <option value="">評価を選択してください</option>
+                @for (int i = 5; i >= 1; i--)
+                {
+                    <option value="@i">@i ★</option>
+                }
+            </select>
+            <span asp-validation-for="NewReview.Rating" class="text-danger"></span>
+        </div>
+
+        <!-- コメント -->
+        <div class="form-group">
+            <label asp-for="NewReview.Comment">コメント</label>
+            <textarea asp-for="NewReview.Comment" class="form-control" rows="4"
+                      placeholder="商品の使い心地や満足度などを記入してください"></textarea>
+            <span asp-validation-for="NewReview.Comment" class="text-danger"></span>
+        </div>
+
+        <!-- ボタン -->
+        <div class="form-group text-right">
+            <button type="submit" class="btn btn-primary">レビューを投稿</button>
+        </div>
+    </form>
+</div>
+

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<FictitiousGamesReviewCore.Models.Product>
+
+<div class="container mt-5">
+    <div class="jumbotron text-center" style="background-color:#f9f9f9; padding:30px 20px;">
+        <h3>GameReview</h3>
+    </div>
+
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-sm-6 col-md-4">
+                <div class="thumbnail">
+                    <img src="@product.ImageUrl" alt="@product.Name" style="height:200px; width:100%; object-fit:cover;" />
+                    <div class="caption">
+                        <h4>@product.Name</h4>
+                        <p>@product.Description</p>
+
+                        @if (product.Reviews != null && product.Reviews.Any())
+                        {
+                            <p>
+                                <span style="color: #E6B800; font-size: 1.2em;">★</span>
+                                <span class="text-warning fw-bold">
+                                    @product.Reviews.Average(r => r.Rating).ToString("0.0")
+                                </span>
+                            </p>
+                        }
+                        else
+                        {
+                            <p>
+                                <span style="color: gray;">★</span>
+                                <span class="text-muted">評価なし</span>
+                            </p>
+                        }
+                        <p><strong>@product.Price.ToString("C")</strong></p>
+                        <p>
+                            <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary" role="button">詳細</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
