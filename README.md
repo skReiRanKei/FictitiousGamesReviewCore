@@ -1,4 +1,4 @@
-# 🎮 Fictitious Games Review - ASP.NET Core MVCで作る商品レビューサイト
+# 🎮 ASP.NET Core MVCで作る商品レビューサイト
 
 ---
 
@@ -56,10 +56,8 @@ ASP.NET Core MVCとEntity Framework Coreをベースに構築されており、*
 
 - 投稿されたレビューの編集・削除機能の追加（管理者用）
 - `ILogger<T>` によるログ出力機能の導入
-- `EnableDebug` 設定による開発支援表示の切り替え
 - 商品カテゴリやタグによるフィルター機能の実装
 - ASP.NET Identity を用いたユーザー登録と認証
-- Web API との切り替えによるSPA対応（Blazor等も視野）
 
 ---
 
@@ -67,12 +65,12 @@ ASP.NET Core MVCとEntity Framework Coreをベースに構築されており、*
 
 
 - 商品一覧ページ  
-  ![一覧画面](./Image/products-index.png)
+  ![一覧画面](./FictitiousGamesReviewCore/Image/products-index.png)
 
 - 商品詳細（レビュー統計）  
-  ![レビュー統計](./Image/product-details.png)
+  ![レビュー統計](./FictitiousGamesReviewCore/Image/product-details.png)
 
 - 商品詳細（レビュー投稿）  
-  ![レビュー投稿](./Image/review-breakdown.png)
+  ![レビュー投稿](./FictitiousGamesReviewCore/Image/review-breakdown.png)
 
 ---

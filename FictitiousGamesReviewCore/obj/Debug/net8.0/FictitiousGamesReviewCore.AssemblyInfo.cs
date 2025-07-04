@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FictitiousGamesReviewCore")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+843b0461a41bba19922091f7bad1c64b369fbacf")]
 [assembly: System.Reflection.AssemblyProductAttribute("FictitiousGamesReviewCore")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FictitiousGamesReviewCore")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
